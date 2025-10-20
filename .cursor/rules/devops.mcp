@@ -1,0 +1,96 @@
+# devops.mcp
+# Rules for DevOps, Docker, deployment, CI/CD, and infrastructure
+# Author: Oli Meimberg
+# Version: 1.0
+
+rules:
+  - type: edit
+    pattern: "{Dockerfile,docker-compose.yml,docker-compose.yaml}"
+    allow: true
+    message: "Docker file edits allowed"
+
+  - type: edit
+    pattern: ".github/workflows/**/*.{yml,yaml}"
+    allow: true
+    message: "GitHub Actions workflow edits allowed"
+
+  - type: edit
+    pattern: "{Jenkinsfile,*.gitlab-ci.yml}"
+    allow: true
+    message: "CI/CD pipeline edits allowed"
+
+  - type: security
+    denyPatterns:
+      - "**/*.pem"
+      - "**/*.key"
+      - "**/secrets/**"
+      - "**/*-secret.yml"
+      - "**/kubeconfig"
+      - "**/.ssh/**"
+    message: "Infrastructure secrets protected"
+
+  - type: command
+    denyCommands:
+      - "docker system prune -af"
+      - "kubectl delete namespace"
+      - "rm -rf /"
+      - "git push --force"
+    message: "Destructive commands blocked"
+
+  - type: custom
+    note: >
+      Docker best practices:
+      - Use multi-stage builds to reduce image size
+      - Minimize layers (combine RUN commands)
+      - Use specific base image tags, not :latest
+      - Run containers as non-root user
+      - Use .dockerignore to exclude unnecessary files
+      - Leverage build cache effectively
+      - Set proper health checks
+      - Use environment variables for configuration
+
+  - type: custom
+    note: >
+      Docker Compose:
+      - Use version 3.8+
+      - Define networks explicitly
+      - Use volumes for persistent data
+      - Set resource limits
+      - Use depends_on with condition for service dependencies
+      - Define restart policies
+      - Use .env files for environment variables
+
+  - type: custom
+    note: >
+      GitHub Actions:
+      - Use official actions from marketplace
+      - Pin action versions with @v2 tags
+      - Use secrets for sensitive data
+      - Implement proper job dependencies
+      - Cache dependencies (npm, maven, gradle)
+      - Use matrix builds for multi-version testing
+      - Set proper permissions for GITHUB_TOKEN
+      - Use environments for deployment protection
+
+  - type: custom
+    note: >
+      Deployment:
+      - Never expose secrets in logs or artifacts
+      - Use semantic versioning for releases
+      - Implement blue-green or canary deployments
+      - Always have rollback strategy
+      - Monitor deployment health
+      - Use infrastructure as code (Terraform, Ansible)
+      - Document deployment procedures
+
+  - type: custom
+    note: >
+      Security:
+      - Scan images for vulnerabilities
+      - Keep base images updated
+      - Use secrets management (Vault, AWS Secrets Manager)
+      - Implement least privilege access
+      - Enable audit logging
+      - Use TLS/SSL for all external communication
+      - Regular security updates
+

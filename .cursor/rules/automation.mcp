@@ -1,0 +1,26 @@
+# automation.mcp
+# Rules for AI workflows, automations, and validation
+# Author: Oli Meimberg
+# Version: 1.0
+
+rules:
+  - type: custom
+    note: >
+      AI-assisted development principles:
+      - Validate AI-generated code before committing
+      - Review security implications of generated code
+      - Test thoroughly, especially edge cases
+      - Maintain code consistency with project style
+      - Document AI-generated complex logic
+      - Human review required for critical paths
+
+  - type: custom
+    note: >
+      Automation guidelines:
+      - Automate repetitive tasks
+      - Keep automation scripts in version control
+      - Document automation workflows
+      - Implement proper error handling
+      - Log automation activities
+      - Make automations idempotent where possible
+
