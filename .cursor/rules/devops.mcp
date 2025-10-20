@@ -39,6 +39,18 @@ rules:
 
   - type: custom
     note: >
+      Configuration principles:
+      - Never hardcode URLs, IPs, ports, or service names in code
+      - All configuration MUST come from environment variables
+      - NO defaults or fallbacks in code - fail fast if config missing
+      - Document ALL required environment variables
+      - Use internal Docker network names for inter-container communication
+      - Keep public URLs separate from internal URLs
+      - Example: STRAPI_INTERNAL_URL (internal) vs NEXT_PUBLIC_STRAPI_BASEURL (public)
+      - Validate required env vars at startup
+
+  - type: custom
+    note: >
       Docker best practices:
       - Use multi-stage builds to reduce image size
       - Minimize layers (combine RUN commands)
