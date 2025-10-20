@@ -39,23 +39,14 @@ if [ ! -d "$PROJECT_PATH/.cursor" ]; then
     mkdir -p "$PROJECT_PATH/.cursor"
 fi
 
-# Check if target already exists
-if [ -e "$RULES_TARGET" ]; then
-    echo "⚠️  Warning: $RULES_TARGET already exists"
-    read -p "Remove and replace it? (y/N): " -n 1 -r
-    echo
-    if [[ $REPLY =~ ^[Yy]$ ]]; then
-        rm -rf "$RULES_TARGET"
-    else
-        echo "❌ Cancelled"
-        exit 1
-    fi
+# Remove existing if present (force with unlink if rm fails)
+if [ -e "$RULES_TARGET" ] || [ -L "$RULES_TARGET" ]; then
+    echo "⚠️  Removing existing: $RULES_TARGET"
+    unlink "$RULES_TARGET" 2>/dev/null || rm -rf "$RULES_TARGET"
 fi
 
 # Create relative symlink
-cd "$PROJECT_PATH/.cursor"
-ln -s "$RELATIVE_PATH" rules
-cd - > /dev/null
+(cd "$PROJECT_PATH/.cursor" && ln -s "$RELATIVE_PATH" rules)
 
 echo "✅ Successfully linked cursor rules (using relative path)!"
 echo ""
