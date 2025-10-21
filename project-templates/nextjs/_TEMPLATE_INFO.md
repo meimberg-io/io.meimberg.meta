@@ -20,6 +20,8 @@ nextjs/
 │       └── globals.css         # Tailwind imports
 ├── public/                     # Static assets
 ├── Dockerfile                  # Multi-stage production build
+├── docker-compose.yml          # Unified compose (dev/prod profiles)
+├── docker-compose.prod.yml     # Reference: server deployment config
 ├── package.json                # Dependencies (Next.js 15, React 19, Tailwind 4)
 ├── next.config.ts              # Next.js config with standalone output
 ├── tsconfig.json               # TypeScript configuration
@@ -79,44 +81,8 @@ The template includes comprehensive documentation:
 2. **doc/SETUP-CHECKLIST.md** - Step-by-step checklist for new projects
 3. **doc/GITHUB-SETUP.md** - GitHub configuration and first deployment
 4. **doc/DEPLOYMENT.md** - Operations, troubleshooting, and advanced topics
+5. **doc/DOCKER-COMPOSE.md** - Docker Compose usage and local development
 
-### 🔧 Customization Points
-
-When creating a new project, you'll need to customize:
-
-**Required:**
-- App name (search/replace `myapp`, `MYAPP`, `My App`)
-- Port number (search/replace `5678`)
-- Domain name (in doc/GITHUB-SETUP.md, deploy.yml)
-- Metadata (in src/app/layout.tsx)
-- Content (in src/app/page.tsx)
-
-**Optional:**
-- Dependencies (add to package.json)
-- Environment variables (add to env.example, workflow)
-- Database services (add to docker-compose in workflow)
-- Additional pages/components (in src/app/)
-- Styling (customize Tailwind config)
-
-### ⚡ Quick Start
-
-```bash
-# 1. Copy template
-cp -r project-templates/nextjs ../io.meimberg.yourproject
-
-# 2. Update app name in all files (see doc/SETUP-CHECKLIST.md)
-
-# 3. Install and test
-cd ../io.meimberg.yourproject
-npm install
-npm run dev
-
-# 4. Setup GitHub, DNS, deploy
-# Follow doc/GITHUB-SETUP.md
-
-# 5. Deploy
-git push origin main
-```
 
 ### 🎨 What the Default App Looks Like
 
@@ -161,6 +127,62 @@ This template is based on working projects (monstermemory, awesomeapps.frontend)
 - Proven configuration and workflows
 
 **Note:** When updating the template, test thoroughly and update this document.
+
+
+---
+
+# 🔧 Cookbook
+
+When creating a new project, you'll need to customize:
+
+## Required:
+
+1. App name (search/replace `myapp`, `MYAPP`, `My App`)
+2. Port number (search/replace `5678`)
+3. Domain name (in doc/GITHUB-SETUP.md, deploy.yml)
+4. Metadata (in src/app/layout.tsx)
+5. Content (in src/app/page.tsx)
+
+## Optional
+
+- Dependencies (add to package.json)
+- Environment variables (add to env.example, workflow)
+- Database services (add to docker-compose in workflow)
+- Additional pages/components (in src/app/)
+- Styling (customize Tailwind config)
+
+## ⚡ Quick Start
+
+```bash
+# 1. Copy template
+cp -r project-templates/nextjs ../io.meimberg.yourproject
+
+# 2. Update app name in all files (see doc/SETUP-CHECKLIST.md)
+
+# 3. Install and test
+cd ../io.meimberg.yourproject
+npm install
+npm run dev
+
+# 4. Setup GitHub, DNS, deploy
+# Follow doc/GITHUB-SETUP.md
+
+# 5. Deploy
+git push origin main
+```
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 ---
 

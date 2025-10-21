@@ -106,6 +106,10 @@ Your app will auto-deploy to production! 🎉
 .
 ├── .github/workflows/
 │   └── deploy.yml          # CI/CD pipeline
+├── doc/                    # Documentation
+│   ├── SETUP-CHECKLIST.md  # Setup guide
+│   ├── GITHUB-SETUP.md     # GitHub config
+│   └── DEPLOYMENT.md       # Operations
 ├── src/
 │   └── app/
 │       ├── layout.tsx      # Root layout
@@ -113,6 +117,8 @@ Your app will auto-deploy to production! 🎉
 │       └── globals.css     # Global styles
 ├── public/                 # Static assets
 ├── Dockerfile              # Production build
+├── docker-compose.yml      # Unified compose (dev/prod profiles)
+├── docker-compose.prod.yml # Reference: GitHub Actions creates this
 ├── next.config.ts          # Next.js config
 ├── tailwind.config.ts      # Tailwind config
 ├── tsconfig.json           # TypeScript config
@@ -137,6 +143,24 @@ npm run test:ci      # Tests with coverage
 ```
 
 ### Docker Development
+
+**Using Docker Compose (Recommended)**
+
+```bash
+# Development mode (with volume mounts)
+docker compose --profile dev up
+
+# Production mode (test production build locally)
+docker compose --profile prod up
+
+# Rebuild and start
+docker compose --profile dev up --build
+
+# Stop
+docker compose --profile dev down
+```
+
+**Using Docker directly**
 
 ```bash
 # Build image
@@ -190,7 +214,8 @@ GitHub Actions runs:
 
 - **[GITHUB-SETUP.md](doc/GITHUB-SETUP.md)** - Initial setup checklist
 - **[DEPLOYMENT.md](doc/DEPLOYMENT.md)** - Operations & troubleshooting
-- **[Ansible Structure](/doc/ANSIBLE-STRUCTURE.md)** - Infrastructure overview
+- **[DOCKER-COMPOSE.md](doc/DOCKER-COMPOSE.md)** - Docker Compose usage guide
+- **[Ansible Structure](../../doc/ANSIBLE-STRUCTURE.md)** - Infrastructure overview
 
 ---
 
@@ -236,4 +261,5 @@ See examples in `awesomeapps.frontend` for PostgreSQL/MySQL integration.
 ## 📝 License
 
 MIT License
+
 

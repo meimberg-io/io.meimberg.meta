@@ -57,3 +57,6 @@ ENV HOSTNAME="0.0.0.0"
 # https://nextjs.org/docs/pages/api-reference/next-config-js/output
 CMD ["node", "server.js"]
 
+
+
+

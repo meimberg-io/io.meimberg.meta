@@ -1,0 +1,31 @@
+# Production docker-compose.yml
+# This file is automatically created by GitHub Actions on the server
+# It's included here as reference/documentation
+
+version: "3.9"
+
+services:
+  myapp:
+    image: ghcr.io/USERNAME/io.meimberg.myapp:latest
+    container_name: myapp
+    restart: unless-stopped
+    environment:
+      - NODE_ENV=production
+      - PORT=5678
+      - HOSTNAME=0.0.0.0
+    labels:
+      # Traefik automatic routing
+      - "traefik.enable=true"
+      - "traefik.http.routers.myapp.rule=Host(`myapp.meimberg.io`)"
+      - "traefik.http.routers.myapp.entrypoints=websecure"
+      - "traefik.http.routers.myapp.tls.certresolver=le"
+      - "traefik.http.services.myapp.loadbalancer.server.port=5678"
+    networks:
+      - traefik
+
+networks:
+  traefik:
+    external: true
+
+
+

@@ -1,0 +1,48 @@
+# Unified docker-compose.yml for both local development and production deployment
+services:
+  # Base service definition
+  app-base:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - "${APP_PORT}:5678"
+    environment:
+      - NODE_ENV=${NODE_ENV:-development}
+      - PORT=5678
+
+    restart: unless-stopped
+    networks:
+      - app-network
+    healthcheck:
+      test: ["CMD", "node", "-e", "require('http').get('http://localhost:5678/', (res) => process.exit(res.statusCode === 200 ? 0 : 1)).on('error', () => process.exit(1))"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
+
+  # Development service with volume mounts
+  app-dev:
+    profiles: ["dev"]
+    extends: app-base
+    volumes:
+      - ./src:/app/src:ro
+      - ./public:/app/public:ro
+      - ./next.config.ts:/app/next.config.ts:ro
+      - ./tailwind.config.ts:/app/tailwind.config.ts:ro
+      - ./postcss.config.mjs:/app/postcss.config.mjs:ro
+      - ./tsconfig.json:/app/tsconfig.json:ro
+      - /app/node_modules
+
+  # Production service without volume mounts
+  app-prod:
+    profiles: ["prod"]
+    extends: app-base
+
+  
+
+networks:
+  app-network:
+    driver: bridge
+
+
