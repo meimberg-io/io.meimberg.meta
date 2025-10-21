@@ -1,0 +1,134 @@
+name: Build and Deploy MYAPP
+
+on:
+  push:
+    branches: [ main, master ]
+
+env:
+  REGISTRY: ghcr.io
+  IMAGE_NAME: ${{ github.repository }}
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+
+    - name: Setup Node.js
+      uses: actions/setup-node@v4
+      with:
+        node-version: '20'
+        cache: 'npm'
+
+    - name: Install dependencies
+      run: npm ci
+
+    - name: Run tests
+      run: |
+        npm run lint
+        npm run build
+        npm run test:ci
+
+  build-and-push:
+    needs: test
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      packages: write
+    
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+
+    - name: Log in to Container Registry
+      uses: docker/login-action@v3
+      with:
+        registry: ${{ env.REGISTRY }}
+        username: ${{ github.actor }}
+        password: ${{ secrets.GITHUB_TOKEN }}
+
+    - name: Extract metadata
+      id: meta
+      uses: docker/metadata-action@v5
+      with:
+        images: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}
+        tags: |
+          type=ref,event=branch
+          type=sha,prefix={{branch}}-
+          type=semver,pattern={{version}}
+          type=raw,value=latest
+
+    - name: Build and push Docker image
+      uses: docker/build-push-action@v5
+      with:
+        context: .
+        push: true
+        tags: ${{ steps.meta.outputs.tags }}
+        labels: ${{ steps.meta.outputs.labels }}
+
+  deploy:
+    needs: build-and-push
+    runs-on: ubuntu-latest
+    if: github.event_name == 'push' && (github.ref == 'refs/heads/main' || github.ref == 'refs/heads/master')
+    env:
+      APP_DOMAIN: ${{ vars.APP_DOMAIN || 'myapp.meimberg.io' }}
+      DOCKER_IMAGE: ghcr.io/${{ github.repository }}:latest
+      GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+    
+    steps:
+    - name: Deploy to server
+      uses: appleboy/ssh-action@v1.0.3
+      with:
+        host: ${{ vars.SERVER_HOST }}
+        username: ${{ vars.SERVER_USER || 'deploy' }}
+        key: ${{ secrets.SSH_PRIVATE_KEY }}
+        envs: GITHUB_TOKEN,DOCKER_IMAGE
+        script: |
+          set -e
+          
+          # Login to GitHub Container Registry
+          echo "$GITHUB_TOKEN" | docker login ghcr.io -u ${{ github.actor }} --password-stdin
+          
+          # Create project directory
+          mkdir -p /srv/projects/myapp
+          cd /srv/projects/myapp
+          
+          # Create docker-compose.yml with Traefik labels
+          cat > docker-compose.yml << EOF
+          services:
+            myapp:
+              image: $DOCKER_IMAGE
+              container_name: myapp
+              restart: unless-stopped
+              environment:
+                - NODE_ENV=production
+                - PORT=5678
+                - HOSTNAME=0.0.0.0
+              labels:
+                - "traefik.enable=true"
+                - "traefik.http.routers.myapp.rule=Host(\`${{ env.APP_DOMAIN }}\`)"
+                - "traefik.http.routers.myapp.entrypoints=websecure"
+                - "traefik.http.routers.myapp.tls.certresolver=le"
+                - "traefik.http.services.myapp.loadbalancer.server.port=5678"
+              networks:
+                - traefik
+          
+          networks:
+            traefik:
+              external: true
+          EOF
+          
+          # Pull latest image and deploy
+          docker compose pull
+          docker compose up -d
+          
+          # Verify deployment
+          if docker ps | grep -q myapp; then
+            echo "✅ MYAPP deployed successfully!"
+            echo "🌐 Accessible at: https://${{ env.APP_DOMAIN }}"
+          else
+            echo "❌ Deployment failed - container not running"
+            exit 1
+          fi
+
