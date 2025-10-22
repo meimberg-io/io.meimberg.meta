@@ -1,12 +1,12 @@
-# Production docker-compose.yml
-# This file is automatically created by GitHub Actions on the server
-# It's included here as reference/documentation
+# Production docker-compose.yml template
+# This file is copied to the server by GitHub Actions and processed with envsubst
+# Environment variables are substituted during deployment
 
 version: "3.9"
 
 services:
   myapp:
-    image: ghcr.io/USERNAME/io.meimberg.myapp:latest
+    image: ${DOCKER_IMAGE}
     container_name: myapp
     restart: unless-stopped
     environment:
@@ -16,7 +16,7 @@ services:
     labels:
       # Traefik automatic routing
       - "traefik.enable=true"
-      - "traefik.http.routers.myapp.rule=Host(`myapp.meimberg.io`)"
+      - "traefik.http.routers.myapp.rule=Host(`${APP_DOMAIN}`)"
       - "traefik.http.routers.myapp.entrypoints=websecure"
       - "traefik.http.routers.myapp.tls.certresolver=le"
       - "traefik.http.services.myapp.loadbalancer.server.port=5678"
