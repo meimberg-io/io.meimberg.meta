@@ -1,57 +1,66 @@
 # Cursor Rules Collection
 
-This directory contains reusable `.mcp` (Cursor Rules) files for different project types.
+This directory contains reusable `.mdc` (Markdown with frontmatter) Cursor Rules files for different project types.
 
 ## Available Rules
 
 | File | Purpose |
 |------|---------|
-| `chatstyle.mcp` | Chat response style and behavior |
-| `oli.mcp` | Base rules for all projects (style, security, git protection) |
-| `nextjs.mcp` | Next.js 15 App Router frontend projects |
-| `strapi.mcp` | Strapi 5.x backend/CMS projects |
-| `java.mcp` | Java projects (Spring Boot, Jakarta EE) |
-| `devops.mcp` | Docker, CI/CD, GitHub Actions, deployment |
-| `n8n.mcp` | n8n workflow automation |
-| `automation.mcp` | AI workflows and automation guidelines |
-| `experimental.mcp` | Sandbox for testing new rules |
+| `chatstyle.mdc` | Chat response style and behavior |
+| `oli.mdc` | Base rules for all projects (style, security, git protection) |
+| `documentation.mdc` | Markdown documentation standards (compact, factual) |
+| `nextjs.mdc` | Next.js 15 App Router frontend projects |
+| `strapi.mdc` | Strapi 5.x backend/CMS projects |
+| `devops.mdc` | Docker, CI/CD, GitHub Actions, deployment |
+| `automation.mdc` | AI workflows and automation guidelines |
 
 ## Usage
 
 ### In Your Projects
 
-Copy or symlink this directory into your project:
+Use the `setup.sh` script to create symlinks in your project:
 
 ```bash
-# Symlink (recommended for multiple local projects)
-ln -s ~/io.meimberg.template/.cursor/rules /path/to/your-project/.cursor/rules
-
-# Or copy (for independent projects)
-cp -r ~/io.meimberg.template/.cursor/rules /path/to/your-project/.cursor/
+# From the io.meimberg.meta directory
+./setup.sh /path/to/your-project
 ```
 
-Cursor automatically loads and merges all `.mcp` files.
+This creates individual symlinks for each `.mdc` file in your project's `.cursor/rules/` directory.
 
 ### Customization
 
-You can add project-specific rules by creating additional `.mcp` files in your project's `.cursor/rules/` directory. They will be merged with these base rules.
+You can:
+- Remove individual rule symlinks if not needed for a specific project
+- Add project-specific rules by creating additional `.mdc` files in your project's `.cursor/rules/` directory
+
+Cursor automatically loads and merges all `.mdc` files.
 
 ## Rule Structure
 
-Each `.mcp` file contains YAML-formatted rules:
+Each `.mdc` file contains YAML frontmatter followed by markdown content:
 
-```yaml
-rules:
-  - type: edit          # Control which files can be edited
-  - type: security      # Protect sensitive data
-  - type: style         # Code style conventions
-  - type: command       # Terminal command restrictions
-  - type: custom        # Freeform notes and guidelines
+```markdown
+---
+title: Rule Title
+description: Short description
+globs: ["**/*.ts", "app/**"]
+autoAttach: true
+alwaysApply: true
+---
+
+# Section Title
+
+- Rule content in markdown format
+- Guidelines, conventions, best practices
 ```
 
-## Priority
+### Frontmatter Options
 
-Rules are merged alphabetically. Later files can override earlier ones.
+- `title`: Display name for the rule
+- `description`: Short description
+- `globs`: File patterns this rule applies to
+- `autoAttach`: Automatically attach when matching files are opened
+- `alwaysApply`: Always apply this rule globally
 
 ## Contributing
 

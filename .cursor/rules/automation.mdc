@@ -1,0 +1,16 @@
+---
+title: Automation & AI
+description: Guidelines for AI assistance and automation workflows
+globs: ["**/*"]
+autoAttach: true
+---
+
+## AI-assisted Development
+- Validate AI-generated code before committing; review security implications.
+- Test thoroughly, including edge cases; maintain project style consistency.
+- Document complex AI-generated logic.
+- Critical paths require human review.
+
+## Automation Guidelines
+- Automate repetitive tasks; version and document scripts.
+- Robust error handling; logging; idempotency where possible.

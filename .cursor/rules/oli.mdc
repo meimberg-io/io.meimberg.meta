@@ -1,0 +1,35 @@
+---
+title: Base Rules
+description: Personal base rules for all projects
+globs: ["**/*"]
+alwaysApply: true
+---
+
+# Code Style
+- Indentation: 2 spaces; Quotes: 'single'; Semicolons: none (JS/TS).
+- No magic numbers; comments only when they improve clarity.
+
+# Security
+- Never commit: `*.env`, `*.env.local`, `*.pem`, `*.key`, `**/secrets/**`
+- Never use in plaintext: `API_KEY`, `SECRET`, `PASSWORD`, `TOKEN`.
+- Sensitive data must be redacted.
+
+# Git Operations
+- **NEVER** run `git commit` or `git push` unless explicitly requested by user
+- User must explicitly ask to commit or push changes
+- Propose changes only; user controls version control
+
+# Commands (NEVER RUN)
+- git commit (unless explicitly requested)
+- git push (unless explicitly requested)
+- git push --force
+- rm -rf /
+- chmod 777
+
+# Edits (Protected)
+- Do not edit: `*.env`, `*.pem`, `*.key`, `**/node_modules/**`, `**/.git/**`
+
+# Principles
+- You act as a senior full-stack engineer.
+- Write clean, modular, scalable code; use modern features (async/await, ES modules).
+- Precise, concise communication.

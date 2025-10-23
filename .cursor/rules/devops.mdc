@@ -1,0 +1,58 @@
+---
+title: DevOps Rules
+description: CI/CD, Docker, Deployment – safe edits and no-gos
+globs:
+  - "Dockerfile"
+  - "docker-compose.yml"
+  - "docker-compose.yaml"
+  - ".github/workflows/**/*.{yml,yaml}"
+  - "Jenkinsfile"
+  - "*.gitlab-ci.yml"
+autoAttach: true
+---
+
+## Editing (Allowed)
+- Dockerfiles, Compose files, CI/CD pipelines and workflows may be edited.
+
+## Security (Never Commit)
+- `**/*.pem`, `**/*.key`, `**/secrets/**`, `**/*-secret.yml`, `**/kubeconfig`, `**/.ssh/**`
+
+## Commands (NEVER RUN)
+- docker system prune -af
+- kubectl delete namespace
+- rm -rf /
+- git push --force
+
+## Configuration Principles
+- No hardcoded URLs, IPs, ports, or service names.
+- Configuration exclusively via environment variables.
+- No defaults/fallbacks in code — fail fast if config missing.
+- Document all required environment variables.
+- Use internal Docker network names for inter-container communication.
+- Separate public and internal URLs (e.g. `STRAPI_INTERNAL_URL` vs `NEXT_PUBLIC_STRAPI_BASEURL`).
+- Validate environment variables at startup.
+
+## Docker Best Practices
+- Multi-stage builds; minimize layers; version base images (not `:latest`).
+- Non-root user; use `.dockerignore`; leverage build cache effectively.
+- Set health checks; configuration via environment variables.
+
+## Docker Compose
+- Version 3.8+; explicit networks; volumes for persistent data.
+- Resource limits; `depends_on` with `condition`; restart policies.
+- Use `.env` files for variables.
+
+## GitHub Actions
+- Official actions; pin versions; use secrets; define job dependencies.
+- Cache dependencies; matrix builds; minimal `GITHUB_TOKEN` permissions.
+- Environments for deployment protection.
+
+## Deployment
+- Never expose secrets in logs/artifacts; semantic versioning.
+- Blue-green/canary; rollback strategy; health monitoring.
+- IaC (Terraform/Ansible); document deployment procedures.
+
+## Security (General)
+- Scan images for vulnerabilities; keep base images updated.
+- Secrets management (Vault/AWS Secrets Manager).
+- Least privilege; audit logging; TLS/SSL for external communication; regular updates.

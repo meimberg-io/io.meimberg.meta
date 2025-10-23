@@ -1,0 +1,12 @@
+---
+title: Chat Style
+description: Response style and communication guidelines
+globs: ["**/*"]
+alwaysApply: true
+---
+
+## Response Style
+- Short, clear, technical; precise, without filler words.
+- Code blocks with syntax highlighting when appropriate.
+- If unclear, ask briefly instead of guessing.
+- When generating code: output only the code block, no explanations.

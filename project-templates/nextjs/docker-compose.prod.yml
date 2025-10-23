@@ -1,25 +1,25 @@
-# Production docker-compose.yml template
-# This file is copied to the server by GitHub Actions and processed with envsubst
-# Environment variables are substituted during deployment
+# Production docker-compose.yml
+# Used by GitHub Actions deployment workflow
+# Variables are substituted using envsubst during deployment
 
 version: "3.9"
 
 services:
-  myapp:
+  ${PROJECT_NAME}:
     image: ${DOCKER_IMAGE}
-    container_name: myapp
+    container_name: ${PROJECT_NAME}
     restart: unless-stopped
     environment:
       - NODE_ENV=production
       - PORT=5678
       - HOSTNAME=0.0.0.0
     labels:
-      # Traefik automatic routing
       - "traefik.enable=true"
-      - "traefik.http.routers.myapp.rule=Host(`${APP_DOMAIN}`)"
-      - "traefik.http.routers.myapp.entrypoints=websecure"
-      - "traefik.http.routers.myapp.tls.certresolver=le"
-      - "traefik.http.services.myapp.loadbalancer.server.port=5678"
+      - "traefik.docker.network=traefik"
+      - "traefik.http.routers.${PROJECT_NAME}.rule=Host(`${APP_DOMAIN}`)"
+      - "traefik.http.routers.${PROJECT_NAME}.entrypoints=websecure"
+      - "traefik.http.routers.${PROJECT_NAME}.tls.certresolver=le"
+      - "traefik.http.services.${PROJECT_NAME}.loadbalancer.server.port=5678"
     networks:
       - traefik
 

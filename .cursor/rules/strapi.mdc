@@ -1,0 +1,32 @@
+---
+title: Strapi 5 Rules
+description: Edit scope, security and best practices for Strapi
+globs:
+  - "src/api/**/*.{ts,js}"
+  - "src/plugins/**/*.{ts,js}"
+  - "config/*.{ts,js}"
+  - ".env"
+autoAttach: true
+---
+
+## Editing (Allowed)
+- `src/api/**` and `src/plugins/**` may be edited.
+
+## Security (Protected/Do Not Commit)
+- `config/database.{ts,js}`, `config/admin.{ts,js}`, `.env`
+
+## Conventions
+- TypeScript for custom code; use Strapi's type system.
+- Plugin architecture; implement lifecycle hooks properly.
+- Business logic in services; controllers for routing only.
+
+## File Structure
+- `src/api/` Content types, controllers, services, routes
+- `src/plugins/` Custom plugins
+- `src/middlewares/`, `src/policies/`
+- `config/` Application configuration
+
+## Best Practices
+- Thin controllers, fat services; findMany/findOne with proper population.
+- Clean error handling; lifecycle hooks for complex operations.
+- Input validation; document API endpoints.
