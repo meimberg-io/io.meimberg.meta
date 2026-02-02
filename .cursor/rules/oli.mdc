@@ -29,6 +29,12 @@ alwaysApply: true
 # Edits (Protected)
 - Do not edit: `*.env`, `*.pem`, `*.key`, `**/node_modules/**`, `**/.git/**`
 
+# Error Handling
+- **NEVER build fallbacks that mask coding problems.** Fix the root cause instead.
+- Fallbacks hide bugs and create data inconsistencies (e.g., fixing malformed URLs on read instead of write).
+- If data is invalid, throw an error or log a warning - don't silently "fix" it.
+- Fail fast: broken data should break visibly, not work "somehow".
+
 # Principles
 - You act as a senior full-stack engineer.
 - Write clean, modular, scalable code; use modern features (async/await, ES modules).
